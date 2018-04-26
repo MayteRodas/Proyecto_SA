@@ -12,8 +12,6 @@ package com.centroS;
 public class sp_obtiene_historial_medico {
     private String dpi;
 
-
-
     public String getDpi() {
         return dpi;
     }

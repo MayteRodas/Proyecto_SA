@@ -5,16 +5,18 @@
  */
 package com.test;
 
+import com.farma.*;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
-import javax.ws.rs.Consumes;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PUT;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 /**
@@ -25,34 +27,100 @@ import javax.ws.rs.core.MediaType;
 @Path("Servicios_F")
 public class Servicios_FResource {
 
-    @Context
-    private UriInfo context;
-
     /**
-     * Creates a new instance of Servicios_FResource
-     */
-    public Servicios_FResource() {
-    }
-
-    /**
-     * Retrieves representation of an instance of com.test.Servicios_FResource
-     * @return an instance of java.lang.String
-     */
+    *
+    * @SERVICIO 2
+    */
     @GET
-    @Produces(MediaType.APPLICATION_XML)
-    public String getXml() {
-        //TODO return proper representation object
-        throw new UnsupportedOperationException();
-    }
+    @Path("/obtiene_existencias")
+    @Produces(MediaType.APPLICATION_JSON)
+    public ArrayList<sp_obtiene_existencias> getDataInJSON(@QueryParam("id_medicamento") int id_medicamento){
+        
+        ArrayList<sp_obtiene_existencias> tm = new ArrayList<>();
+        
+        Connection conn = connect();
+        
+        if (conn != null){
+            
+            String proc = "{ call sp_obtiene_existencias(?) }";
+            CallableStatement cs; 
+            try {
+                    cs = conn.prepareCall(proc);
+                    cs.setInt(1, id_medicamento);
+                    
+                    cs.executeQuery();
+                    
+                    sp_obtiene_existencias oex = new sp_obtiene_existencias();
+                    oex.setId_medicamento(id_medicamento);
 
-    /**
-     * PUT method for updating or creating an instance of Servicios_FResource
-     * @param content representation for the resource
-     */
-    @PUT
-    @Consumes(MediaType.APPLICATION_XML)
-    public void putXml(String content) {
+                    tm.add(oex);
+                    
+                    conn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(Servicios_CSResource.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        
+        }
+        return tm;
     }
+    
+    
+    /**
+    *
+    * @SERVICIO 6
+    */
+    @GET
+    @Path("/trasladoMedicamento")
+    @Produces(MediaType.APPLICATION_JSON)
+    public ArrayList<sp_agrega_traslado> getDataInJSON(@QueryParam("fecha") String fecha, @QueryParam("id_origen") int id_origen, @QueryParam("id_destino") int id_destino){
+        
+        ArrayList<sp_agrega_traslado> tm = new ArrayList<>();
+        
+        Connection conn = connect();
+        
+        if (conn != null){
+            
+            String proc = "{ call sp_obtiene_existencias(?,?,?) }";
+            CallableStatement cs; 
+            try {
+                    cs = conn.prepareCall(proc);
+                    cs.setString(1, fecha);
+                    cs.setInt(2, id_origen);
+                    cs.setInt(3, id_destino);
+                    
+                    cs.executeQuery();
+                    
+                    sp_agrega_traslado atr = new sp_agrega_traslado();
+                    atr.setFecha(fecha);
+                    atr.setId_origen(id_origen);
+                    atr.setId_destino(id_destino);
+                    
+                    //AQUI ESTA LA OTRA CLASE
+                    sp_agrega_detalle_traslado dt = new sp_agrega_detalle_traslado();
+                    dt.setCantidad(id_origen);
+                    dt.setCantidad(id_origen);
+                    dt.setId_traslado(id_destino);
+                    
+                    atr.dtraslado.add(dt);
+
+                    tm.add(atr);
+                    
+                    conn.close();
+                    
+            } catch (SQLException ex) {
+                Logger.getLogger(Servicios_CSResource.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return tm;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     public Connection connect(){

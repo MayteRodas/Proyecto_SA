@@ -13,9 +13,6 @@ public class sp_obtiene_existencias {
     
     private int id_medicamento;
 
-    public sp_obtiene_existencias(int id_medicamento) {
-        this.id_medicamento = id_medicamento;
-    }
 
     public int getId_medicamento() {
         return id_medicamento;

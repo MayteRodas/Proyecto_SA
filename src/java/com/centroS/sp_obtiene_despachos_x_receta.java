@@ -13,9 +13,6 @@ public class sp_obtiene_despachos_x_receta {
     private int id_receta;
 
 
-
-    
-
     public int getId_receta() {
         return id_receta;
     }

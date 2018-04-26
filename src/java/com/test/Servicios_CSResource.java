@@ -26,7 +26,12 @@ import javax.ws.rs.QueryParam;
  */
 @Path("Servicios_CS")
 public class Servicios_CSResource {
-
+    
+    
+    /**
+    *
+    * @SERVICIO 1
+    */
     @GET
     @Path("/traslado_paciente")
     @Produces(MediaType.APPLICATION_JSON)
@@ -63,6 +68,115 @@ public class Servicios_CSResource {
         }
         return tm;
     }
+    
+    /**
+    *
+    * @SERVICIO 4
+    */
+    @GET
+    @Path("/despachosXreceta")
+    @Produces(MediaType.APPLICATION_JSON)
+    public ArrayList<sp_obtiene_despachos_x_receta> getDataInJSON(@QueryParam("id_receta") int id_receta){
+        
+        ArrayList<sp_obtiene_despachos_x_receta> tm = new ArrayList<>();
+        
+        Connection conn = connect();
+        
+        if (conn != null){
+            
+            String proc = "{ call sp_traslado_paciente(?,?,?) }";
+            CallableStatement cs; 
+            try {
+                    cs = conn.prepareCall(proc);
+                    cs.setInt(1, id_receta);
+                    
+                    cs.executeQuery();
+                    
+                    sp_obtiene_despachos_x_receta dxr= new sp_obtiene_despachos_x_receta();
+                    dxr.setId_receta(id_receta);
+
+                    tm.add(dxr);
+                    
+                    conn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(Servicios_CSResource.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        
+        }
+        return tm;
+    }
+    
+    
+    
+    /**
+    *
+    * @SERVICIO 5
+    */
+    @GET
+    @Path("/historialMedico")
+    @Produces(MediaType.APPLICATION_JSON)
+    public ArrayList<sp_obtiene_historial_medico> getDataInJSON(@QueryParam("dpi") String dpi){
+        
+        ArrayList<sp_obtiene_historial_medico> tm = new ArrayList<>();
+        
+        Connection conn = connect();
+        
+        if (conn != null){
+            
+            String proc = "{ call sp_traslado_paciente(?,?,?) }";
+            CallableStatement cs; 
+            try {
+                    cs = conn.prepareCall(proc);
+                    cs.setString(1, dpi);
+                    
+                    cs.executeQuery();
+                    
+                    sp_obtiene_historial_medico hm = new sp_obtiene_historial_medico();
+                    hm.setDpi(dpi);
+
+                    tm.add(hm);
+                    
+                    conn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(Servicios_CSResource.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        
+        }
+        return tm;
+    }
+    
+    /**
+    *
+    * @SERVICIO 6
+    */
+    @GET
+    @Path("/reporteMorbilidad")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String getDataInJSON(){
+        
+        Connection conn = connect();
+        
+        if (conn != null){
+            String proc = "{ call sp_traslado_paciente(?,?,?) }";
+            CallableStatement cs; 
+            try {
+                    cs = conn.prepareCall(proc);
+                    cs.executeQuery();
+                    
+                    conn.close();
+            } catch (SQLException ex) {
+                Logger.getLogger(Servicios_CSResource.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return "Test";
+    }
+    
+    
+    
+    
+    
+    
     
     
     public Connection connect(){

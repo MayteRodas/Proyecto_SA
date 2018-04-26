@@ -5,6 +5,8 @@
  */
 package com.farma;
 
+
+
 /**
  *
  * @author Mayte
@@ -15,12 +17,8 @@ public class sp_agrega_detalle_traslado {
     private int id_medicamento;
     private int cantidad;
 
-    public sp_agrega_detalle_traslado(int id_traslado, int id_medicamento, int cantidad) {
-        this.id_traslado = id_traslado;
-        this.id_medicamento = id_medicamento;
-        this.cantidad = cantidad;
-    }
-
+    
+    
     public int getId_traslado() {
         return id_traslado;
     }
@@ -44,8 +42,5 @@ public class sp_agrega_detalle_traslado {
     public void setCantidad(int cantidad) {
         this.cantidad = cantidad;
     }
-    
-    
-    
     
 }
